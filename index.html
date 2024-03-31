@@ -78,6 +78,31 @@
                 height: 18rem;
             }
         }
+
+        .big-modal {
+            background-color: rgba(54, 43, 0, 0.371);
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .big-modal>button {
+            padding: 1rem;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            color: white;
+            font-size: 2rem;
+        }
     </style>
 
     <script defer src="./scripts/index.js"></script>

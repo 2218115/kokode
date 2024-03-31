@@ -1,4 +1,28 @@
 window.onload = () => {
+    let isOpen = false;
+
+    function frist() {
+        const modalElement = document.createElement("div");
+        modalElement.classList.add("big-modal");
+
+        const buttonElement = document.createElement("button");
+        buttonElement.textContent = "Masuk KoKode";
+
+        modalElement.append(buttonElement);
+        window.document.body.append(modalElement);
+
+        buttonElement.addEventListener('click', () => {
+            modalElement.removeEventListener('click', modalElement);
+            buttonElement.removeEventListener('click', buttonElement);
+
+            modalElement.remove();
+            buttonElement.remove();
+
+        });
+    }
+
+    frist();
+
     let indexGambarSekarang = 0;
     let generatePlaceholderStatus = false;
     let daftarGambar = [

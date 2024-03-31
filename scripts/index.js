@@ -81,6 +81,7 @@ window.onload = () => {
 
     for (const b of buttons) {
         b.onclick = (e) => {
+            e.preventDefault();
             clickSound.play();
         }
     }

@@ -8,10 +8,83 @@
 
     <link rel="stylesheet" href="./styles/base.css">
     <link rel="stylesheet" href="./styles/home.css">
+
+    <style>
+        .carousel {
+            box-sizing: border-box;
+            width: 100%;
+            height: 38rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            transition-duration: 200ms;
+            left: -0.6rem;
+            top: -0.6rem;
+        }
+
+        .carousel:hover {
+            left: 0;
+            top: 0;
+        }
+
+        .carousel:hover .carousel__shadow {
+            margin-left: 0;
+            margin-top: 0;
+        }
+
+        .carousel__shadow {
+            transition-duration: 200ms;
+            z-index: -1;
+            position: absolute;
+            width: 100%;
+            height: 38rem;
+            top: 0;
+            left: 0;
+            margin-left: 1.2rem;
+            margin-top: 1.2rem;
+            border: 1px solid var(--main-color);
+            background-color: white;
+        }
+
+        .carousel__image {
+            object-position: center;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel__state {
+            width: 1rem;
+            height: 1rem;
+            background-color: white;
+            border: 1px solid var(--main-color);
+        }
+
+        .carousel__state--active {
+            background-color: var(--main-color);
+        }
+
+        #carousel-status {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media screen and (max-width: 900px) {
+
+            .carousel,
+            .carousel__shadow {
+                height: 18rem;
+            }
+        }
+    </style>
+
+    <script defer src="./scripts/index.js"></script>
+
 </head>
 
 <body>
-
     <header class="container header">
         <div>
             <a href="/">
@@ -32,7 +105,16 @@
             </ul>
         </nav>
     </header>
+
     <main class="container main">
+        <div class="carousel">
+            <img src="./images/carousel_1.png" id="carousel-image" alt="carousel image" class="carousel__image">
+            <div class="carousel__shadow"></div>
+        </div>
+
+        <div id="carousel-status">
+        </div>
+
         <article class="main__article">
             <aside class="main__aside">
                 <h2>Info Kopi🍵</h2>

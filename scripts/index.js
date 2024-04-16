@@ -1,4 +1,4 @@
-window.onload = () => {
+function index() {
     let isOpen = false;
 
     function frist() {

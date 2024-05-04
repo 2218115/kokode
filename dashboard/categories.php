@@ -225,7 +225,15 @@
     </aside>
     <main class="main__container">
         <header class="header">
-            <h3>👤 Makrus Ali.</h3>
+                <h3>👤 
+                <?php
+                    $loggedUser = $_SESSION["user"];
+                    if ($loggedUser != null) {
+                        echo $loggedUser->username;
+                    } else {
+                        echo "Belum ada user yang loggin";
+                    }
+                ?> </h3>
         </header>
 
         <button class="button--brown">Tambah kategori ➕</button>

@@ -89,13 +89,10 @@
             align-items: center;
             justify-content: flex-end;
             padding-right: 1rem;
-            margin-bottom: 4rem;
         }
 
-
-
         .dash__container {
-            margin-top: 1rem;
+            margin-top: 4rem;
             display: grid;
             gap: 1rem;
             grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -104,18 +101,12 @@
         .card {
             display: flex;
             flex-direction: column;
-            align-items: start;
-            justify-content: space-between;
+            align-items: center;
             box-sizing: border-box;
             box-shadow: 0px 0px 2px rgb(170, 170, 170);
             border-radius: 0.5rem;
             height: 14rem;
             padding: 1rem;
-        }
-
-        .card__buttons {
-            display: flex;
-            gap: 1rem;
         }
 
         .card__title {
@@ -124,50 +115,9 @@
             padding: 0;
         }
 
-        button {
-            font-size: 1rem;
-            padding: 1rem;
-            display: block;
-            border: none;
-            background-color: white;
-            box-shadow: 0px 0px 2px rgb(170, 170, 170);
-            border-radius: 0.5rem;
-            cursor: pointer;
-        }
-
-        button:hover {
-            box-shadow: 0px 0px 2px rgb(139, 139, 139);
-            background-color: rgb(232, 230, 230);
-        }
-
-        .button--brown {
-            color: white;
-            background-color: #461111;
-        }
-
-        .button--brown:hover {
-            background-color: #390e0e;
-        }
-
-        .button--red {
-            color: white;
-            background-color: #f76464;
-        }
-
-        .button--red:hover {
-            color: white;
-            background-color: #c25151;
-        }
-
-
-        .button--blue {
-            color: white;
-            background-color: rgb(93, 93, 238);
-        }
-
-        .button--blue:hover {
-            color: white;
-            background-color: rgb(63, 63, 200);
+        .card>p {
+            font-size: 4rem;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -182,13 +132,13 @@
             <ul class="navigation__list">
                 <div>
                     <li>
-                        <a href="/dashboard/index.html" class="navigation__items ">Dashboard</a>
+                        <a href="/dashboard/index.html" class="navigation__items navigation--active">Dashboard</a>
                     </li>
                     <li>
-                        <a href="./articles.html" class="navigation__items navigation--active">Artikel</a>
+                        <a href="./articles.html" class="navigation__items">Artikel</a>
                     </li>
                     <li>
-                        <a href="./categories.html" class="navigation__items ">Kategori Artikel</a>
+                        <a href="./categories.html" class="navigation__items">Kategori Artikel</a>
                     </li>
                 </div>
                 <div>
@@ -201,28 +151,25 @@
     </aside>
     <main class="main__container">
         <header class="header">
-            <h3>👤 Makrus Ali.</h3>
+                <h3>👤 
+                <?php
+                    $loggedUser = $_SESSION["user"];
+                    if ($loggedUser != null) {
+                        echo $loggedUser->username;
+                    } else {
+                        echo "Belum ada user yang loggin";
+                    }
+                ?> </h3>
         </header>
-
-        <button class="button--brown">Buat Artikel 📢</button>
 
         <div class="dash__container">
             <div class="card">
-                <h3 class="card__title">Makna Kopi dan Kode Program yang bersatu</h3>
-                <p>Dilihat🙈 32 kali</p>
-                <div class="card__buttons">
-                    <button class="button--blue">Rubah</button>
-                    <button class="button--red">Hapus</button>
-                </div>
+                <h3 class="card__title">Terbitan Artikel</h3>
+                <p>✈️32</p>
             </div>
-
             <div class="card">
-                <h3 class="card__title">Ngoding sambil ngopi memang mantap</h3>
-                <p>Dilihat🙈 32 kali</p>
-                <div class="card__buttons">
-                    <button class="button--blue">Rubah</button>
-                    <button class="button--red">Hapus</button>
-                </div>
+                <h3 class="card__title">Jumlah lihat Artikel</h3>
+                <p>🙈300</p>
             </div>
         </div>
 

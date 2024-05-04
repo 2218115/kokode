@@ -1,3 +1,16 @@
+<?php
+
+    session_start();
+
+    if (isset($_POST["login"])) {
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+
+        $_SESSION["username"] = $username;
+        $_SESSION["password"] = $password;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -8,174 +21,6 @@
 
     <link rel="stylesheet" href="./styles/base.css">
     <link rel="stylesheet" href="./styles/home.css">
-
-    <style>
-        .carousel {
-            box-sizing: border-box;
-            width: 100%;
-            height: 38rem;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-            position: relative;
-            transition-duration: 200ms;
-            left: -0.6rem;
-            top: -0.6rem;
-        }
-
-        .carousel:hover {
-            left: 0;
-            top: 0;
-        }
-
-        .carousel:hover .carousel__shadow {
-            margin-left: 0;
-            margin-top: 0;
-        }
-
-        .carousel__shadow {
-            transition-duration: 200ms;
-            z-index: -1;
-            position: absolute;
-            width: 100%;
-            height: 38rem;
-            top: 0;
-            left: 0;
-            margin-left: 1.2rem;
-            margin-top: 1.2rem;
-            border: 1px solid var(--main-color);
-            background-color: white;
-        }
-
-        .carousel__image {
-            object-position: center;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .carousel__state {
-            width: 1rem;
-            height: 1rem;
-            background-color: white;
-            border: 1px solid var(--main-color);
-        }
-
-        .carousel__state--active {
-            background-color: var(--main-color);
-        }
-
-        #carousel-status {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        @media screen and (max-width: 900px) {
-
-            .carousel,
-            .carousel__shadow {
-                height: 18rem;
-            }
-        }
-
-        .big-modal {
-            background-color: rgba(54, 43, 0, 0.371);
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .big-modal>button {
-            padding: 1rem;
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
-            color: white;
-            font-size: 2rem;
-        }
-
-        .modal-container {
-            top: 0;
-            left: 0;
-            position: fixed;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100vh;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            display: none;
-        }
-
-        .modal--show {
-            display: flex;
-        }
-
-        .modal {
-            width: 38rem;
-        }
-
-        .modal__btn-close {
-            box-sizing: border-box;
-            position: absolute;
-            right: 0;
-            top: 0;
-            padding: 0.8rem;
-            background-color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #461111;
-            border: 1px solid #461111;
-        }
-
-        .modal__btn-close:hover {
-            background-color: #461111;
-            border: 1px solid white;
-            color: white;
-        }
-
-        .form__group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .pop-up {
-            text-align: center;
-            font-size: 1.5rem;
-            position: fixed;
-            width: 30rem;
-            height: 8rem;
-            top: 10%;
-            left: calc(50% - 15rem);
-            background-color: white;
-            padding: 2rem;
-            border: 1px solid #461111;
-            z-index: 1;
-        }
-
-        .articles {
-            margin-bottom: 3rem;
-        }
-
-        .list-articles {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-    </style>
     <script defer src="./scripts/index.js"></script>
     <script defer src="./scripts/modal.js"></script>
     <script defer src="./scripts/articles_api.js"></script>
@@ -224,9 +69,15 @@
                 <li>
                     <a href="#tentang">Tentang</a>
                 </li>
-                <li>
-                    <a href="login.html" class="button">Masuk</a>
-                </li>
+                    <?php
+                        if (isset($_SESSION["username"]) && isset($_SESSION["password"])) {
+                            $loggedUsername = $_SESSION["username"];
+                            echo "<li><p> <b>{$loggedUsername} </b></p></li>";
+                            echo '<li><form action="process-logout.php" method="post"> <input type="submit" name="logout" value="keluar" class="button"></form></li>';
+                        } else {
+                            echo '<li><a href="login.php" class="button">Masuk</a></li>';
+                        }
+                    ?>
             </ul>
         </nav>
     </header>

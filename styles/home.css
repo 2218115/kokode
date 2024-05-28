@@ -248,3 +248,11 @@
     flex-direction: column;
     gap: 1.2rem;
 }
+
+.list-articles__item>p {
+    margin-bottom: 0.2rem;
+}
+
+.list-articles__item>a {
+    margin-top: 0.8rem;
+}

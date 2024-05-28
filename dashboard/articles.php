@@ -1,3 +1,10 @@
+<?php
+include './../db_connection.php';
+include './../base.php';
+
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +15,7 @@
 
     <link rel="stylesheet" href="base.css">
     <style>
-        body {
+        * {
             font-family: 'Noto Sans', 'Noto Sans JP', sans-serif;
         }
 
@@ -37,7 +44,6 @@
             width: 100%;
         }
 
-        .navigation {}
 
         .navigation__list {
             box-sizing: border-box;
@@ -169,72 +175,230 @@
             color: white;
             background-color: rgb(63, 63, 200);
         }
+
+        .form_modal {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            position: absolute;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form_modal > form {
+            box-shadow: 0px 0px 2px rgb(170, 170, 170);
+            border-radius: 0.5rem;
+            background-color: white;
+        }
+
+        .form_modal > form > div {
+            margin: 2rem;
+        }
+
+        .form_modal > form > div > label {
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .form_modal > form > div > input {
+            box-shadow: 0px 0px 2px rgb(170, 170, 170);
+            border-radius: 0.5rem;
+            border: none;
+            padding: 0.6rem ;
+            font-size: 1.2rem;
+        }
+
+        .form_modal > form > div > textarea {
+            box-shadow: 0px 0px 2px rgb(170, 170, 170);
+            border-radius: 0.5rem;
+            border: none;
+            padding:  0.6rem ;
+            font-size: 1.2rem;
+        }
+
+        .form_modal > form > div > select {
+            box-shadow: 0px 0px 2px rgb(170, 170, 170);
+            border-radius: 0.5rem;
+            border: none;
+            padding:  0.6rem ;
+            font-size: 1.2rem;
+        }
+
+        .form_modal > .button__close {
+            background-color: red;
+            margin-right: 2rem;
+            color: white;
+        }
     </style>
 </head>
 
 <body>
-
-</body>
-<div class="lr_container">
-    <aside class="aside">
-        <h1 class="aside__title">KoKode.</h1>
-        <nav class="navigation">
-            <ul class="navigation__list">
+    
+    <div class="lr_container">
+        <aside class="aside">
+            <h1 class="aside__title">KoKode.</h1>
+            <nav class="navigation">
+                <ul class="navigation__list">
+                    <div>
+                        <li>
+                            <a href="./index.php" class="navigation__items">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="./articles.php" class="navigation__items navigation--active">Artikel</a>
+                        </li>
+                        <li>
+                            <a href="./categories.php" class="navigation__items">Kategori Artikel</a>
+                        </li>
+                    </div>
                 <div>
                     <li>
-                        <a href="/dashboard/index.html" class="navigation__items ">Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="./articles.html" class="navigation__items navigation--active">Artikel</a>
-                    </li>
-                    <li>
-                        <a href="./categories.html" class="navigation__items ">Kategori Artikel</a>
-                    </li>
-                </div>
-                <div>
-                    <li>
-                        <a href="" class="navigation__items">Logout</a>
+                        <form action="./../auth_process.php" method="POST"> <button type="submit" name="logout" class="navigation__items button--red"> Keluar </button> </form>
                     </li>
                 </div>
             </ul>
         </nav>
     </aside>
     <main class="main__container">
-        <header class="header">
-            <h3>👤 
-                <?php
-                    $loggedUser = $_SESSION["user"];
-                    if ($loggedUser != null) {
-                        echo $loggedUser->username;
-                    } else {
-                        echo "Belum ada user yang loggin";
-                    }
+        <div class="form_modal" id="form_modal">
+            <button class="button__close" onclick="closeModal()"> X </button>
+            <form action="./articles_process.php" method="POST" >
+                <div>
+                    <label for="title">Judul</label>
+                    <input type="text" name="title" />
+                </div>
+                <div>
+                    <label for="content">Konten</label>
+                    <textarea name="content" cols="100" rows="10"> </textarea>
+                </div> 
+                <div>
+                    <label> Kategori </label>
+                    <select name="categoryId">
+                    <?php 
+                        $statement = $conn->prepare("SELECT * FROM tb_kategori");
+                        $statement->execute();
+                        $result = $statement->get_result();
+                        $categories = $result->fetch_all(MYSQLI_ASSOC);
+                        
+                        foreach ($categories as $category) {
+                            echo '<option value="'. $category["id"] .'">' . $category["name"] . '</option>';                    
+                        }
+                    ?>
+                    </select>
+                </div>
+            <div>
+                <button type="submit" name="insert" class="button--brown">Buat</button>
+            </div>
+    </form>
+</div>
+<header class="header">
+    <h3>👤 
+        <?php
+                if (isset($_SESSION["email"]) && isset($_SESSION["userId"])) {
+                    echo $_SESSION["email"];
+                } else {
+                    header('location:login.php');
+                    return;
+                }
                 ?> </h3>
         </header>
-
-        <button class="button--brown">Buat Artikel 📢</button>
-
+        
+        <button class="button--brown" onclick="showModal()">Buat Artikel 📢</button>
+        
         <div class="dash__container">
-            <div class="card">
-                <h3 class="card__title">Makna Kopi dan Kode Program yang bersatu</h3>
-                <p>Dilihat🙈 32 kali</p>
-                <div class="card__buttons">
-                    <button class="button--blue">Rubah</button>
-                    <button class="button--red">Hapus</button>
-                </div>
-            </div>
+            <?php 
+                
+                $authorId = $_SESSION["userId"];
+                
+                $statement = $conn->prepare("SELECT ar.id as 'id', au.email as 'author_email', c.name as 'category', ar.title as 'title', ar.content as 'content' FROM tb_artikel as ar INNER JOIN tb_pengguna as au ON au.id = ar.id_pengguna INNER JOIN tb_kategori as c ON c.id = ar.id_category WHERE au.id = ?");
+                $statement->bind_param("s", $authorId);
+                $statement->execute();
+                $result = $statement->get_result();
+                $articles = $result->fetch_all(MYSQLI_ASSOC);
+                
+                $dummyId = 0;
 
-            <div class="card">
-                <h3 class="card__title">Ngoding sambil ngopi memang mantap</h3>
-                <p>Dilihat🙈 32 kali</p>
-                <div class="card__buttons">
-                    <button class="button--blue">Rubah</button>
-                    <button class="button--red">Hapus</button>
-                </div>
-            </div>
+                foreach ($articles as $article) {
+                    echo '
+                    <div class="card">
+                    <h3 class="card__title">'. $article["title"] .'</h3>
+                    <p> '. cutSentence($article["content"], 100) . '</p>
+                    <div class="card__buttons">
+                    <button class="button--blue" onclick="showModalEdit('. $dummyId .')">Rubah</button>
+                    <form action="./articles_process.php" method="POST">
+                    <input type="hidden" value="'. $article["id"] .'"  name="id"/>
+                    <button type="submit" name="delete" class="button--red">Hapus</button> 
+                    </form>
+                    </div>
+                    </div>
+                    ';
+
+                    echo '
+                    <div class="form_modal" id="form_edit_'. $dummyId .'">
+                        <button class="button__close" onclick="closeModalEdit('. $dummyId .')"> X </button>
+                        <form action="./articles_process.php" method="POST" >
+                            <input type="hidden" value="'. $article["id"] .'"  name="id"/>
+                            <div>
+                                <label for="title">Judul</label>
+                                <input type="text" name="title" value="'. $article["title"] .'"/>
+                            </div>
+                            <div>
+                                <label for="content">Konten</label>
+                                <textarea name="content" cols="100" rows="10">'. $article["content"] .'</textarea>
+                            </div> 
+                            <div>
+                                <label> Kategori </label>
+                                <select name="categoryId">';
+
+                    foreach ($categories as $category) {
+                        if ($category == $articles["category"]) {
+                            echo  '<option value="'. $category["id"] .'" selected>' . $category["name"] . '</option> ';
+                        } else {
+                            echo  '<option value="'. $category["id"] .'">' . $category["name"] . '</option> ';
+                        }
+                    }
+                    
+                    echo '
+                                </select>
+                        </div>
+                    <div>
+                        <button type="submit" name="update" class="button--brown">Perbarui</button>
+                    </div>
+                    </form>
+                    </div>
+                    ';
+                    
+                    $dummyId++;
+                }
+                ?>
         </div>
-
     </main>
 </div>
+<script>
+    const formModal = document.getElementById("form_modal");
+
+    function showModal() {
+            formModal.style.display = "flex";
+    }
+
+    function closeModal() {
+        formModal.style.display = "none";
+    }
+
+    function showModalEdit(id) {
+        const el = document.getElementById(`form_edit_${id}`);
+        el.style.display = "flex";
+    }
+
+    function closeModalEdit(id) {
+        const el = document.getElementById(`form_edit_${id}`);
+        el.style.display = "none";
+    }
+
+</script>
+</body>
 
 </html>

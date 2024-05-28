@@ -55,7 +55,7 @@
 <body class="flex--center">
     <main class="container">
         <h1 class="title">Yay ayo daftar</h1>
-        <form action="" class="form">
+        <form action="./auth_process.php" method="POST" class="form" >
             <div class="form__input__group">
                 <label for="" class="form__label">Email</label>
                 <input type="email" name="email" id="input_email" class="input mb1">
@@ -64,11 +64,7 @@
                 <label for="Katasandi" class="form__label">Katasandi</label>
                 <input type="password" name="password" id="input_password" class="input mb1">
             </div>
-            <div class="form__input__group">
-                <label for="Katasandi" class="form__label">Konfirmasi Katasandi</label>
-                <input type="password" name="password" id="input_password" class="input mb1">
-            </div>
-            <button type="submit" class="button button--primary button--large">Masuk</button>
+            <button type="submit" class="button button--primary button--large" name="register">Masuk</button>
         </form>
     </main>
     <footer class="container">

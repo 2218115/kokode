@@ -1,12 +1,3 @@
-<?php
-    session_start();
-
-    if (isset($_SESSION["username"]) && isset($_SESSION["password"])) {
-       header("Location: ./index.php", true, 302);
-        die();
-    }
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 
@@ -65,18 +56,18 @@
 <body class="flex--center">
     <main class="container">
         <h1 class="title">Masuk ke akun kamu, iya Kamu🤗</h1>
-        <form action="./index.php" class="form" method="post">
+        <form action="./auth_process.php" class="form" method="POST">
             <div class="form__input__group">
-                <label for="username" class="form__label">Username</label>
-                <input type="username" name="username" id="input_email" class="input mb1">
+                <label for="email" class="form__label">Email</label>
+                <input type="email" name="email" id="input_email" class="input mb1">
             </div>
             <div class="form__input__group">
                 <label for="password" class="form__label">Katasandi</label>
                 <input type="password" name="password" id="input_password" class="input mb1">
             </div>
-            <button type="submit" name="login" class="button button--primary button--large">Masuk</button>
+            <button type="submit" name="login" class="button button--primary button--large" name="login">Masuk</button>
             <div class="form__input__group">
-                <p>Kamu belum punya akun?🥲, ayo sini <a href="register.html" class="link">Daftar</a></p>
+                <p>Kamu belum punya akun?🥲, ayo sini <a href="register.php" class="link">Daftar</a></p>
             </div>
         </form>
     </main>

@@ -1,14 +1,8 @@
 <?php
-
     session_start();
 
-    if (isset($_POST["login"])) {
-        $username = $_POST["username"];
-        $password = $_POST["password"];
-
-        $_SESSION["username"] = $username;
-        $_SESSION["password"] = $password;
-    }
+    include './db_connection.php';
+    include './base.php';
 ?>
 
 <!DOCTYPE html>
@@ -70,10 +64,10 @@
                     <a href="#tentang">Tentang</a>
                 </li>
                     <?php
-                        if (isset($_SESSION["username"]) && isset($_SESSION["password"])) {
-                            $loggedUsername = $_SESSION["username"];
-                            echo "<li><p> <b>{$loggedUsername} </b></p></li>";
-                            echo '<li><form action="process-logout.php" method="post"> <input type="submit" name="logout" value="keluar" class="button"></form></li>';
+                        if (isset($_SESSION["email"]) && isset($_SESSION["userId"])) {
+                            $loggedEmail = $_SESSION["email"];
+                            echo "<li><p> <b>{$loggedEmail} </b></p></li>";
+                            echo '<li><form action="auth_process.php" method="post"> <input type="submit" name="logout" value="keluar" class="button"></form></li>';
                         } else {
                             echo '<li><a href="login.php" class="button">Masuk</a></li>';
                         }
@@ -95,7 +89,23 @@
 
         <div class="articles">
             <h2>Artikel Terbaru</h2>
-            <ul class="list-articles" id="list-articles">
+            <ul class="list-articles">                
+                <?php 
+                $statement = $conn->prepare("SELECT ar.id as 'id', au.email as 'author_email', c.name as 'category', ar.title as 'title', ar.content as 'content' FROM tb_artikel as ar INNER JOIN tb_pengguna as au ON au.id = ar.id_pengguna INNER JOIN tb_kategori as c ON c.id = ar.id_category");
+                $statement->execute();
+                $result = $statement->get_result();
+                $articles = $result->fetch_all(MYSQLI_ASSOC);
+                
+                foreach ($articles as $article) {
+                    echo '<li class="list-articles__item">
+                            <h3>'. $article["title"] .'</h3>
+                            <p> Oleh: ' . $article["author_email"] . ' </p>
+                            <p> Kategori: ' . $article["category"] . ' </p> 
+                            <p>' . cutSentence($article["content"], 200) .' </p>
+                            <a href="kemana gitu">Baca lebih lanjut.</a>
+                        </li>';
+                    }
+                    ?>
             </ul>
         </div>
 

@@ -6,7 +6,7 @@ function index() {
         modalElement.classList.add("big-modal");
 
         const buttonElement = document.createElement("button");
-        buttonElement.textContent = "Masuk KoKode";
+        buttonElement.textContent = "Masuk Dunia Kopi Dan Kode 🍵";
 
         modalElement.append(buttonElement);
         window.document.body.append(modalElement);

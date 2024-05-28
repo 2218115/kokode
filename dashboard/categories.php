@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -200,24 +204,24 @@
 
 </body>
 <div class="lr_container">
-    <aside class="aside">
+<aside class="aside">
         <h1 class="aside__title">KoKode.</h1>
         <nav class="navigation">
             <ul class="navigation__list">
                 <div>
                     <li>
-                        <a href="/dashboard/index.html" class="navigation__items ">Dashboard</a>
+                        <a href="./index.php" class="navigation__items">Dashboard</a>
                     </li>
                     <li>
-                        <a href="./articles.html" class="navigation__items">Artikel</a>
+                        <a href="./articles.php" class="navigation__items">Artikel</a>
                     </li>
                     <li>
-                        <a href="./categories.html" class="navigation__items navigation--active">Kategori Artikel</a>
+                        <a href="./categories.php" class="navigation__items navigation--active">Kategori Artikel</a>
                     </li>
                 </div>
                 <div>
                     <li>
-                        <a href="" class="navigation__items">Logout</a>
+                        <form action="./../auth_process.php" method="POST"> <button type="submit" name="logout" class="navigation__items button--red"> Keluar </button> </form>
                     </li>
                 </div>
             </ul>
@@ -225,15 +229,15 @@
     </aside>
     <main class="main__container">
         <header class="header">
-                <h3>👤 
+            <h3>👤 
                 <?php
-                    $loggedUser = $_SESSION["user"];
-                    if ($loggedUser != null) {
-                        echo $loggedUser->username;
-                    } else {
-                        echo "Belum ada user yang loggin";
-                    }
-                ?> </h3>
+                if (isset($_SESSION["email"]) && isset($_SESSION["userId"])) {
+                    echo $_SESSION["email"];
+                } else {
+                    header('location:login.php');
+                    return;
+                }
+            ?> </h3>
         </header>
 
         <button class="button--brown">Tambah kategori ➕</button>

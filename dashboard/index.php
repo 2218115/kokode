@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -119,6 +123,32 @@
             font-size: 4rem;
             font-weight: bold;
         }
+
+        .button--red {
+            color: white;
+            background-color: #f76464;
+        }
+
+        .button--red:hover {
+            color: white;
+            background-color: #c25151;
+        }
+
+        button {
+            font-size: 1rem;
+            padding: 1rem;
+            display: block;
+            border: none;
+            background-color: white;
+            box-shadow: 0px 0px 2px rgb(170, 170, 170);
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            box-shadow: 0px 0px 2px rgb(139, 139, 139);
+            background-color: rgb(232, 230, 230);
+        }
     </style>
 </head>
 
@@ -132,18 +162,18 @@
             <ul class="navigation__list">
                 <div>
                     <li>
-                        <a href="/dashboard/index.html" class="navigation__items navigation--active">Dashboard</a>
+                        <a href="./index.php" class="navigation__items navigation--active">Dashboard</a>
                     </li>
                     <li>
-                        <a href="./articles.html" class="navigation__items">Artikel</a>
+                        <a href="./articles.php" class="navigation__items">Artikel</a>
                     </li>
                     <li>
-                        <a href="./categories.html" class="navigation__items">Kategori Artikel</a>
+                        <a href="./categories.php" class="navigation__items">Kategori Artikel</a>
                     </li>
                 </div>
                 <div>
                     <li>
-                        <a href="" class="navigation__items">Logout</a>
+                        <form action="./../auth_process.php" method="POST"> <button type="submit" name="logout" class="navigation__items button--red"> Keluar </button> </form>
                     </li>
                 </div>
             </ul>
@@ -153,11 +183,11 @@
         <header class="header">
                 <h3>👤 
                 <?php
-                    $loggedUser = $_SESSION["user"];
-                    if ($loggedUser != null) {
-                        echo $loggedUser->username;
+                    if (isset($_SESSION["email"]) && isset($_SESSION["userId"])) {
+                        echo $_SESSION["email"];
                     } else {
-                        echo "Belum ada user yang loggin";
+                        header('location:login.php');
+                        return;
                     }
                 ?> </h3>
         </header>
@@ -165,11 +195,19 @@
         <div class="dash__container">
             <div class="card">
                 <h3 class="card__title">Terbitan Artikel</h3>
-                <p>✈️32</p>
-            </div>
-            <div class="card">
-                <h3 class="card__title">Jumlah lihat Artikel</h3>
-                <p>🙈300</p>
+                <p>✈️ 
+                <?php
+                    include './../db_connection.php';
+                    $authorId = $_SESSION["userId"];
+
+                    $statement = $conn->prepare("SELECT COUNT(ar.id) FROM tb_artikel as ar INNER JOIN tb_pengguna as au ON au.id = ar.id_pengguna WHERE au.id = ?");
+                    $statement->bind_param("s", $authorId);
+                    $statement->execute();
+                    $result = $statement->get_result();
+                    $articlesCount = $result->fetch_assoc()["COUNT(ar.id)"];
+                    
+                    echo $articlesCount;
+                ?></p>
             </div>
         </div>
 

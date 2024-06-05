@@ -151,6 +151,11 @@ session_start();
             background-color: #461111;
         }
 
+        button-outline-brown {
+            border: 1px solid #461111;
+            color: #461111;
+        }
+
         .button--brown:hover {
             background-color: #390e0e;
         }
@@ -306,8 +311,13 @@ session_start();
                 ?> </h3>
         </header>
         
-        <button class="button--brown" onclick="showModal()">Buat Artikel 📢</button>
-        
+        <div style="display: flex; gap: 1rem;">
+            <button class="button--brown" onclick="showModal()">Buat Artikel 📢</button>
+            <form action="./articles_process.php" method="POST">
+                <button class="button--outline-brown" type="submit" name="report"> Cetak Data Artikel</button>
+            </form>
+        </div>
+
         <div class="dash__container">
             <?php 
                 

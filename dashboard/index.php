@@ -194,7 +194,7 @@
 
         <div class="dash__container">
             <div class="card">
-                <h3 class="card__title">Terbitan Artikel</h3>
+                <h3 class="card__title">Jumlah Terbitan Artikel</h3>
                 <p>✈️ 
                 <?php
                     include './../db_connection.php';
@@ -208,9 +208,8 @@
                     
                     echo $articlesCount;
                 ?></p>
-            </div>
+            </div>            
         </div>
-
     </main>
 </div>
 

@@ -1,5 +1,8 @@
 <?php
-    session_start();
+include './../db_connection.php';
+include './../base.php';
+
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -8,11 +11,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | KoKode</title>
+    <title>Kategori | KoKode</title>
 
     <link rel="stylesheet" href="base.css">
     <style>
-        body {
+        * {
             font-family: 'Noto Sans', 'Noto Sans JP', sans-serif;
         }
 
@@ -41,7 +44,6 @@
             width: 100%;
         }
 
-        .navigation {}
 
         .navigation__list {
             box-sizing: border-box;
@@ -96,8 +98,13 @@
             margin-bottom: 4rem;
         }
 
+
+
         .dash__container {
             margin-top: 1rem;
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
         }
 
         .card {
@@ -169,56 +176,84 @@
             background-color: rgb(63, 63, 200);
         }
 
-        table {
+        .form_modal {
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100vh;
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            position: absolute;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form_modal > form {
             box-shadow: 0px 0px 2px rgb(170, 170, 170);
             border-radius: 0.5rem;
-
+            background-color: white;
         }
 
-        tr {
+        .form_modal > form > div {
+            margin: 2rem;
+        }
+
+        .form_modal > form > div > label {
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .form_modal > form > div > input {
+            box-shadow: 0px 0px 2px rgb(170, 170, 170);
             border-radius: 0.5rem;
+            border: none;
+            padding: 0.6rem ;
+            font-size: 1.2rem;
+        }
+
+        .form_modal > form > div > textarea {
             box-shadow: 0px 0px 2px rgb(170, 170, 170);
-            transition-duration: 300ms;
+            border-radius: 0.5rem;
+            border: none;
+            padding:  0.6rem ;
+            font-size: 1.2rem;
         }
 
-        tr:hover {
-            background-color: #553f0111;
-        }
-
-        td {
-
+        .form_modal > form > div > select {
             box-shadow: 0px 0px 2px rgb(170, 170, 170);
-            padding: 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            padding:  0.6rem ;
+            font-size: 1.2rem;
         }
 
-        td>div {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .form_modal > .button__close {
+            background-color: red;
+            margin-right: 2rem;
+            color: white;
         }
     </style>
 </head>
 
 <body>
-
-</body>
-<div class="lr_container">
-<aside class="aside">
-        <h1 class="aside__title">KoKode.</h1>
-        <nav class="navigation">
-            <ul class="navigation__list">
-                <div>
-                    <li>
-                        <a href="./index.php" class="navigation__items">Dashboard</a>
-                    </li>
-                    <li>
-                        <a href="./articles.php" class="navigation__items">Artikel</a>
-                    </li>
-                    <li>
-                        <a href="./categories.php" class="navigation__items navigation--active">Kategori Artikel</a>
-                    </li>
-                </div>
+    
+    <div class="lr_container">
+        <aside class="aside">
+            <h1 class="aside__title">KoKode.</h1>
+            <nav class="navigation">
+                <ul class="navigation__list">
+                    <div>
+                        <li>
+                            <a href="./index.php" class="navigation__items">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="./articles.php" class="navigation__items">Artikel</a>
+                        </li>
+                        <li>
+                            <a href="./categories.php" class="navigation__items navigation--active">Kategori Artikel</a>
+                        </li>
+                    </div>
                 <div>
                     <li>
                         <form action="./../auth_process.php" method="POST"> <button type="submit" name="logout" class="navigation__items button--red"> Keluar </button> </form>
@@ -228,68 +263,100 @@
         </nav>
     </aside>
     <main class="main__container">
-        <header class="header">
-            <h3>👤 
-                <?php
+        <div class="form_modal" id="form_modal">
+            <button class="button__close" onclick="closeModal()"> X </button>
+            <form action="./categories_process.php" method="POST" >
+                <div>
+                    <label for="name">Nama Kategori</label>
+                    <input type="text" name="name" />
+                </div>
+            <div>
+                <button type="submit" name="insert" class="button--brown">Buat</button>
+            </div>
+    </form>
+</div>
+<header class="header">
+    <h3>👤 
+        <?php
                 if (isset($_SESSION["email"]) && isset($_SESSION["userId"])) {
                     echo $_SESSION["email"];
                 } else {
                     header('location:login.php');
                     return;
                 }
-            ?> </h3>
+                ?> </h3>
         </header>
-
-        <button class="button--brown">Tambah kategori ➕</button>
+        
+        <button class="button--brown" onclick="showModal()">Tambah Kategori ➕</button>
+        
         <div class="dash__container">
-            <table>
-                <thead>
-                    <tr>
-                        <td>No.</td>
-                        <td>Kategori</td>
-                        <td>Deskripsi Kategori</td>
-                        <td>Aksi</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Santai</td>
-                        <td>Kategori santai berisi artikel tentang kopi dan kode yang santai-santai ajah.</td>
-                        <td>
-                            <div>
-                                <button class="button--blue">Rubah</button>
-                                <button class="button--red">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Santai</td>
-                        <td>Kategori santai berisi artikel tentang kopi dan kode yang santai-santai ajah.</td>
-                        <td>
-                            <div>
-                                <button class="button--blue">Rubah</button>
-                                <button class="button--red">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Santai</td>
-                        <td>Kategori santai berisi artikel tentang kopi dan kode yang santai-santai ajah.</td>
-                        <td>
-                            <div>
-                                <button class="button--blue">Rubah</button>
-                                <button class="button--red">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <?php 
+                
+                $statement = $conn->prepare("SELECT id, name FROM tb_kategori");
+                $statement->execute();
+                $result = $statement->get_result();
+                $categoriesList = $result->fetch_all(MYSQLI_ASSOC);
+                
+                $dummyId = 0;
 
+                foreach ($categoriesList as $categories) {
+                    echo '
+                    <div class="card">
+                        <h3 class="card__title">'. $categories["name"] .'</h3>
+                        <div class="card__buttons">
+                            <button class="button--blue" onclick="showModalEdit('. $dummyId .')">Rubah</button>
+                            <form action="./categories_process.php" method="POST">
+                                <input type="hidden" value="'. $categories["id"] .'"  name="id"/>
+                                <button type="submit" name="delete" class="button--red">Hapus</button> 
+                            </form>
+                        </div>
+                    </div>
+                    ';
+
+                    echo '
+                    <div class="form_modal" id="form_edit_'. $dummyId .'">
+                        <button class="button__close" onclick="closeModalEdit('. $dummyId .')"> X </button>
+                        <form action="./categories_process.php" method="POST" >
+                            <input type="hidden" value="'. $categories["id"] .'"  name="id"/>
+                            <div>
+                                <label for="name">Nama Kategori</label>
+                                <input type="text" name="name" value="'. $categories["name"] .'"/>
+                            </div>
+                    <div>
+                        <button type="submit" name="update" class="button--brown">Perbarui</button>
+                    </div>
+                    </form>
+                    </div>
+                    ';
+                    
+                    $dummyId++;
+                }
+                ?>
+        </div>
     </main>
 </div>
+<script>
+    const formModal = document.getElementById("form_modal");
+
+    function showModal() {
+            formModal.style.display = "flex";
+    }
+
+    function closeModal() {
+        formModal.style.display = "none";
+    }
+
+    function showModalEdit(id) {
+        const el = document.getElementById(`form_edit_${id}`);
+        el.style.display = "flex";
+    }
+
+    function closeModalEdit(id) {
+        const el = document.getElementById(`form_edit_${id}`);
+        el.style.display = "none";
+    }
+
+</script>
+</body>
 
 </html>
